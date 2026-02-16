@@ -1,4 +1,4 @@
-# COA Ultra Monitoring
+# COA-Monitoring
 
 Static dashboard + JSON-file API backend.
 
