@@ -1,0 +1,14 @@
+{
+  "users": [
+    {
+      "username": "kellie",
+      "password": "kellie2004",
+      "role": "admin",
+      "unit": "System HQ"
+    }
+  ],
+  "reports": [],
+  "inbox": [],
+  "audit": [],
+  "session": null
+}

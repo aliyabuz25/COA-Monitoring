@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COA-e | Monitoring System</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Icons (RemixIcon) -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="app">
+        <!-- Login Screen -->
+        <section id="authScreen" class="auth-wrapper">
+            <div class="auth-panel">
+                <div class="auth-brand">
+                    <div class="logo-box">
+                        <i class="ri-shield-check-fill"></i>
+                    </div>
+                    <h1>COA-e</h1>
+                </div>
+
+                <!-- Login Form -->
+                <div id="loginFormContainer" class="auth-form-container">
+                    <form id="loginForm">
+                        <div class="input-group">
+                            <label><i class="ri-user-line"></i> Account ID</label>
+                            <input type="text" id="loginUsername" placeholder="Enter Unit Name or Admin" required>
+                        </div>
+                        <div class="input-group">
+                            <label><i class="ri-lock-password-line"></i> Password</label>
+                            <div class="password-input-wrap">
+                                <input type="password" id="loginPassword" placeholder="••••••••" required>
+                                <button type="button" class="password-toggle" data-target="loginPassword"
+                                    aria-label="Show password">
+                                    <i class="ri-eye-line"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <i class="ri-login-box-line"></i> Access Dashboard
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dashboard Layout -->
+        <section id="dashboardScreen" class="dashboard-layout hidden">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="sidebar-header">
+                    <div class="logo-box small">
+                        <i class="ri-shield-check-fill"></i>
+                    </div>
+                    <span class="brand-name">COA-e</span>
+                </div>
+
+                <nav class="sidebar-nav">
+                    <div class="nav-section">
+                        <span class="nav-label">Main Menu</span>
+                        <a href="#" class="nav-item active" data-view="section-overview">
+                            <i class="ri-dashboard-line"></i> Overview
+                        </a>
+                        <a href="#" class="nav-item" data-view="section-reports">
+                            <i class="ri-file-list-3-line"></i> Reports
+                            <span class="badge badge-sm" id="pendingCountBadge">0</span>
+                        </a>
+                        <a href="#" class="nav-item" data-view="section-inbox" id="inboxTrigger">
+                            <i class="ri-mail-line"></i> Inbox
+                            <span class="badge badge-sm badge-danger hidden" id="notifBadge">0</span>
+                        </a>
+                    </div>
+
+                    <div class="nav-section admin-only hidden" id="adminNavSection">
+                        <span class="nav-label">Administration</span>
+                        <a href="#" class="nav-item" data-view="section-audit">
+                            <i class="ri-history-line"></i> Audit Logs
+                        </a>
+                        <a href="#" class="nav-item" data-view="section-units">
+                            <i class="ri-building-line"></i> Units Mgmt
+                        </a>
+                    </div>
+                </nav>
+
+                <div class="sidebar-footer">
+                    <div class="user-mini-profile">
+                        <div class="avatar-circle">
+                            <i class="ri-user-3-fill"></i>
+                        </div>
+                        <div class="user-details">
+                            <span class="user-name" id="displayName">Loading...</span>
+                            <span class="user-role" id="displayRole">...</span>
+                        </div>
+                    </div>
+                    <button id="logoutBtn" class="btn-icon-only">
+                        <i class="ri-logout-box-r-line"></i>
+                    </button>
+                </div>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <header class="top-bar">
+                    <h2 id="pageTitle">Dashboard Overview</h2>
+                    <div class="top-actions">
+                        <div class="date-display" id="currentDate">Mon, 15 Feb 2026</div>
+                    </div>
+                </header>
+
+                <div class="content-wrapper">
+
+                    <!-- VIEW: OVERVIEW -->
+                    <section id="section-overview" class="view-section">
+                        <!-- Statistics Row -->
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-icon blue">
+                                    <i class="ri-folder-info-line"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <span class="stat-label">Total Reports</span>
+                                    <h3 class="stat-value" id="statTotal">0</h3>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon orange">
+                                    <i class="ri-timer-flash-line"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <span class="stat-label">Pending Action</span>
+                                    <h3 class="stat-value" id="statPending">0</h3>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon green">
+                                    <i class="ri-checkbox-circle-line"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <span class="stat-label">Compliant</span>
+                                    <h3 class="stat-value" id="statCompleted">0</h3>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon purple">
+                                    <i class="ri-message-3-line"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <span class="stat-label">Messages</span>
+                                    <h3 class="stat-value" id="statMessages">0</h3>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Admin Control Panel -->
+                        <div id="adminControls" class="panel-section hidden" style="margin-top: 24px;">
+                            <div class="panel-row">
+                                <div class="content-card">
+                                    <div class="card-header">
+                                        <h3><i class="ri-add-circle-line"></i> Assign New Requirement</h3>
+                                    </div>
+                                    <div class="card-body inline-form">
+                                        <div class="form-group">
+                                            <label>Target Unit</label>
+                                            <div class="select-wrapper">
+                                                <select id="reportUnitSelect"></select>
+                                                <i class="ri-arrow-down-s-line"></i>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Due Date</label>
+                                            <input type="date" id="reportDueDate">
+                                        </div>
+                                        <button id="addReportBtn" class="btn btn-primary">
+                                            <i class="ri-send-plane-fill"></i> Assign
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="content-card">
+                                    <div class="card-header">
+                                        <h3><i class="ri-notification-badge-line"></i> Broadcast / Reminder</h3>
+                                    </div>
+                                    <div class="card-body inline-form">
+                                        <div class="form-group">
+                                            <label>Recipient</label>
+                                            <div class="select-wrapper">
+                                                <select id="reminderUnitSelect"></select>
+                                                <i class="ri-arrow-down-s-line"></i>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Notice Content</label>
+                                            <input type="text" id="reminderMessage"
+                                                placeholder="Urgent compliance notice...">
+                                        </div>
+                                        <button id="sendReminderBtn" class="btn btn-warning">
+                                            <i class="ri-alarm-warning-fill"></i> Alert
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 24px; text-align: center; color: var(--slate-400); font-size: 14px;">
+                            <i class="ri-arrow-left-line"></i> Select a module from the left menu to view details
+                        </div>
+                    </section>
+
+                    <!-- VIEW: REPORTS -->
+                    <section id="section-reports" class="view-section hidden">
+                        <div class="content-card full-width">
+                            <div class="card-header flex-center">
+                                <h3><i class="ri-file-text-line"></i> Compliance Reports Registry</h3>
+                                <div class="actions">
+                                    <button class="btn btn-sm btn-outline"><i class="ri-filter-3-line"></i>
+                                        Filter</button>
+                                    <button class="btn btn-sm btn-outline"><i class="ri-download-cloud-line"></i>
+                                        Export</button>
+                                </div>
+                            </div>
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID Ref</th>
+                                            <th>Unit Designation</th>
+                                            <th>Deadline</th>
+                                            <th>Compliance Status</th>
+                                            <th>Docs</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="reportsBody">
+                                        <!-- JS Generated -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- VIEW: INBOX -->
+                    <section id="section-inbox" class="view-section hidden">
+                        <div class="content-card">
+                            <div class="card-header">
+                                <h3><i class="ri-discuss-line"></i> Communication Feed</h3>
+                            </div>
+                            <div class="feed-list" id="inboxList"></div>
+                        </div>
+                    </section>
+
+                    <!-- VIEW: AUDIT -->
+                    <section id="section-audit" class="view-section hidden">
+                        <div class="content-card">
+                            <div class="card-header">
+                                <h3><i class="ri-spy-line"></i> System Audit Trail</h3>
+                            </div>
+                            <div class="audit-list" id="auditLogList"></div>
+                        </div>
+                    </section>
+
+                    <!-- VIEW: UNITS -->
+                    <section id="section-units" class="view-section hidden">
+                        <div class="content-card full-width">
+                            <div class="card-header flex-center">
+                                <h3><i class="ri-community-line"></i> Registered Units</h3>
+                                <button class="btn btn-sm btn-primary" id="openAddUnitModal">
+                                    <i class="ri-user-add-line"></i> Add New Unit
+                                </button>
+                            </div>
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Unit Name</th>
+                                            <th>Role</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="unitsBody">
+                                        <!-- JS Generated for Units -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+
+                </div>
+            </main>
+        </section>
+
+        <!-- Toast Container -->
+        <div id="toastContainer" class="toast-container"></div>
+    </div>
+
+    <!-- Document Viewer Modal -->
+    <div id="docModal" class="modal-overlay hidden">
+        <div class="modal-card doc-modal-card">
+            <div class="modal-header">
+                <h3 id="docModalTitle"><i class="ri-file-text-line"></i> Document Viewer</h3>
+                <button class="close-modal" id="closeDocModal"><i class="ri-close-line"></i></button>
+            </div>
+            <div class="modal-body doc-modal-body">
+                <div id="docModalContent" class="doc-modal-content"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-ghost" id="closeDocFooterBtn">Close</button>
+                <a id="docDownloadLink" class="btn btn-primary" href="#" download>
+                    <i class="ri-download-2-line"></i> Download
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Modal -->
+    <div id="uploadModal" class="modal-overlay hidden">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3><i class="ri-upload-cloud-2-line"></i> Upload Compliance Document</h3>
+                <button class="close-modal" id="closeModal"><i class="ri-close-line"></i></button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-subtitle">Attach the required PDF or Excel file for verification.</p>
+                <div class="upload-zone" id="dropZone">
+                    <input type="file" id="fileInput" accept=".pdf,.xlsx,.csv" hidden>
+                    <i class="ri-file-upload-line upload-icon"></i>
+                    <p><strong>Click to browse</strong> or drag file here</p>
+                </div>
+                <div id="selectedFileName" class="file-preview hidden">
+                    <i class="ri-file-paper-2-fill"></i>
+                    <span id="fileNameText">filename.pdf</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-ghost" id="cancelUpload">Cancel</button>
+                <button class="btn btn-success" id="confirmUpload">
+                    <i class="ri-check-line"></i> Submit Report
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Unit Modal (Add/Edit) -->
+    <div id="unitModal" class="modal-overlay hidden">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 id="unitModalTitle"><i class="ri-user-settings-line"></i> Manage Unit</h3>
+                <button class="close-modal" onclick="closeUnitModal()"><i class="ri-close-line"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="unitForm">
+                    <input type="hidden" id="editOriginalUsername">
+                    <div class="input-group">
+                        <label><i class="ri-community-line"></i> Unit Designation (Username)</label>
+                        <input type="text" id="unitName" placeholder="e.g. Finance Dept" required>
+                    </div>
+                    <div class="input-group">
+                        <label><i class="ri-lock-line"></i> Password</label>
+                        <input type="password" id="unitPassword" placeholder="Enter password" required>
+                    </div>
+                    <div class="input-group">
+                        <label><i class="ri-shield-user-line"></i> Access Role</label>
+                        <div class="select-wrapper">
+                            <select id="unitRole">
+                                <option value="unit">Compliance Unit</option>
+                                <option value="admin">Administrator</option>
+                            </select>
+                            <i class="ri-arrow-down-s-line" style="color: var(--slate-400);"></i>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-ghost" onclick="closeUnitModal()">Cancel</button>
+                <button class="btn btn-primary" id="saveUnitBtn">
+                    <i class="ri-save-line"></i> Save Unit
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
